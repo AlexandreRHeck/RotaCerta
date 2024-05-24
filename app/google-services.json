@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1064531621783",
+    "project_id": "rotacerta-ec940",
+    "storage_bucket": "rotacerta-ec940.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064531621783:android:b16f1723e124c927b476d2",
+        "android_client_info": {
+          "package_name": "com.example.rotacerta"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQNpS8E64dPIfTgMmLtZvhcNLCIL43MOs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
