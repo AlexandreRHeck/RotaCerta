@@ -81,6 +81,7 @@ class CadastroActivity : AppCompatActivity() {
 
     private fun validarCampos(): Boolean {
 
+        //teste git
         nome = binding.editNome.text.toString()
         email = binding.editEmail.text.toString()
         senha = binding.editSenha.text.toString()
