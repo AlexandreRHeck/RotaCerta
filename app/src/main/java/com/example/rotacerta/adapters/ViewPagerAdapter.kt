@@ -24,7 +24,7 @@ class ViewPagerAdapter(
             2 -> return ProcurarFragment()
             3 -> return RotaFragment()
         }
-        return  HomeFragment()//ConversasFragment() // esse fragent de retorn eh posicao 0
+        return  HomeFragment()//homeFragment() // esse fragent de retorn eh posicao 0
     }
 
 

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.gms.google-services")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -45,6 +46,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")//Auth Analytics
     implementation("com.google.firebase:firebase-firestore-ktx")//firestore Firebase
     implementation("com.google.firebase:firebase-storage-ktx")//firestore Firebase
+    implementation("com.google.firebase:firebase-database")//FireBaseDataBase
 
 
     implementation(libs.androidx.core.ktx)

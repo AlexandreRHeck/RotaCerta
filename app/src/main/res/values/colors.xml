@@ -8,4 +8,10 @@
 
     <color name="cinza">#D7D6D6</color>
 
+    <color name="remove">#FF4C38</color>
+    <color name="edita">#03B6FC</color>
+    <color name="cardBack">#E5E5E5</color>
+
+
+
 </resources>

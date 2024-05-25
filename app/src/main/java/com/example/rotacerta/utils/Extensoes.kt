@@ -12,3 +12,4 @@ fun Activity.exibirMensagem(mensagem: String){
         Toast.LENGTH_LONG
     ).show()
 }
+
