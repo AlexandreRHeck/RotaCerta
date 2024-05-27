@@ -13,7 +13,7 @@ class FirebaseHelper {
         fun getAuth() = FirebaseAuth.getInstance()
         fun getIdUser() =  getAuth().uid
 
-        fun isAutenticated= getAuth().currentUser != null
+        // fun isAutenticated = getAuth().currentUser != null
 
     }
 }
