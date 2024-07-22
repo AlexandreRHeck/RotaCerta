@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-
+import com.example.rotacerta.databinding.FragmentEditBinding
 class CadastroActivity : AppCompatActivity() {
 
     private val binding by lazy {

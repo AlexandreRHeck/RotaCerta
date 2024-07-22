@@ -8,10 +8,15 @@
             @style/actionOverflowButton
         </item>
     </style>
-    <style name="actionOverflowButton"
-        parent="Widget.AppCompat.ActionButton.Overflow">
+
+    <style name="actionOverflowButton" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="tint">@color/white</item>
     </style>
 
     <style name="Theme.RotaCerta" parent="Base.Theme.RotaCerta" />
+
+    <style name="ThemeOverlay.RotaCerta.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
+        <item name="fullscreenTextColor">@color/light_blue_A200</item>
+    </style>
 </resources>
