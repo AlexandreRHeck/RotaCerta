@@ -9,14 +9,15 @@ import kotlinx.parcelize.Parcelize
 data class Task(
     //adiciona os campos do banco
     // var descricao : String =""
-    var id : String = "",
-    var title : String = "",
-    var documentId: String = "",
-    var nomeCompleto: String = "",
-    var cpf: String = "",
-    var telefone: String = "",
-    var email: String = "",
-    var senha: String = ""
+    var id : String? = null,
+    var title : String? = null,
+    var documentId: String? = null,
+    var nomeCompleto: String? = null,
+    var cpf: String? = null,
+    var telefone: String? = null,
+    var email: String? = null,
+    var senha: String? = null,
+    val turno: Int? = null
 
 
 ) : Parcelable {
