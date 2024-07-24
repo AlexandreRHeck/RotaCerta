@@ -11,7 +11,7 @@ data class Task(
     // var descricao : String =""
     var id : String? = null,
     var title : String? = null,
-    var documentId: String? = null,
+    var documentId: String = "",
     var nomeCompleto: String? = null,
     var cpf: String? = null,
     var telefone: String? = null,
