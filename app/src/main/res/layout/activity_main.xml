@@ -8,8 +8,6 @@
     tools:context=".MainActivity">
 
 
-
-
     <include
         android:id="@+id/includeMainToolbar"
         layout="@layout/toolbar_customizada"

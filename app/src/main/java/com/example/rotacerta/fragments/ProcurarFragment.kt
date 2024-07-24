@@ -42,19 +42,9 @@ class ProcurarFragment : Fragment() {
     private fun navigateToEditFragment(task: Task, viewHolder: TaskAdapter.MyViewHolder) {
         val bundle = Bundle()
         bundle.putParcelable("task", task)
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.fragment_container_edit, EditFragment::class.java, bundle)
-            ?.addToBackStack(null)
-            ?.commit()
-    }
-
-    private fun saveTask(task: Task, editView: View) {
-        // ... (your existing saveTask logic to update Firestore)
-
-        // After successful update:
-        binding.root.removeView(editView)  // Remove the editView
-        binding.rvLista.visibility = View.VISIBLE // Show the RecyclerView again
-        //Optionally update your RecyclerView's adapter data
+        val editDialogFragment = EditDialogFragment()
+        editDialogFragment.arguments = bundle
+        editDialogFragment.show(childFragmentManager, "EditDialogFragment")
     }
 
 

@@ -40,7 +40,7 @@ class EditFragment : Fragment() {
     private fun saveTask() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 
-        if (userId != null && task.documentId != null) {
+        if (userId != null) {
             val updatedTask = Task(
                 nomeCompleto = binding.editNomeCompleto.text.toString(),
             )
