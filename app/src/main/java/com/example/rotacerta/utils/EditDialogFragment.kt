@@ -31,12 +31,27 @@ class EditDialogFragment : DialogFragment() {
         _binding = FragmentEditDialogBinding.inflate(inflater, container, false)
         val task = arguments?.getParcelable<Task>("task")
 
+        //
         if (task != null) {
-            binding.editNomeCompleto.setText(task.nomeCompleto)
-            binding.editCpf.setText(task.cpf)
-            binding.editTelefone.setText(task.telefone)
+
             binding.editEmail.setText(task.email)
-            binding.editSenha.setText(task.senha) // Consider security practices for handling passwords
+            binding.editCpf.setText(task.cpf)
+            binding.editNomeCompleto.setText(task.nomeCompleto)
+            binding.editRua.setText(task.rua)
+            binding.editNumero.setText(task.numero)
+            binding.editCep.setText(task.cep)
+            binding.editCidade.setText(task.cidade)
+            binding.editEstado.setText(task.estado)
+            binding.editDDD.setText(task.ddd)
+            binding.editTelefone.setText(task.telefone)
+            binding.editNomeCompletoAluno.setText(task.nomeCompletoAluno)
+            binding.editEscola.setText(task.escola)
+            binding.editTurno.setText(task.turno)
+            binding.editPontoReferencia.setText(task.pontoReferencia)
+            binding.editObservacoes.setText(task.observacoes)
+            //binding.editNomeCompleto.setText(task.nomeCompleto)
+            //binding.editEmail.setText(task.email)
+           // binding.editSenha.setText(task.senha) // Consider security practices for handling passwords
         } else {
             // Lidar com o caso em que a tarefa é nula (opcional)
         }
@@ -49,13 +64,34 @@ class EditDialogFragment : DialogFragment() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 
         if (userId != null && task != null) { // Verifica se task não é nulo
+
+
+            fun String?.toIntOrNullSafe(): Int? {
+                return this?.replace(Regex("[^\\d]"), "")?.toIntOrNull()
+            }
+
+            fun String?.toLongOrNullSafe(): Long? {
+                return this?.replace(Regex("[^\\d]"), "")?.toLongOrNull()
+            }
             val updatedTask = Task(
-                documentId = task.documentId, // Mantém o documentId original
-                nomeCompleto = binding.editNomeCompleto.text.toString(),
-                cpf = binding.editCpf.text.toString(),
-                telefone = binding.editTelefone.text.toString(),
+                documentId = userId, // Mantém o documentId original
                 email = binding.editEmail.text.toString(),
-                senha = binding.editSenha.text.toString() // Consider security practices for handling passwords
+                cpf = binding.editCpf.text.toString(),
+                nomeCompleto = binding.editNomeCompleto.text.toString(),
+                rua = binding.editRua.text.toString(),
+                numero = binding.editNumero.text.toString(),
+                cep = binding.editCep.text.toString(),
+                cidade = binding.editCidade.text.toString(),
+                estado = binding.editEstado.text.toString(),
+                ddd = binding.editDDD.text.toString(),
+                telefone = binding.editTelefone?.text.toString(),
+                //dados do aluno
+                nomeCompletoAluno = binding.editNomeCompletoAluno.text.toString(),
+                escola = binding.editEscola.text.toString(),
+                turno = binding.editTurno.text.toString(),
+                pontoReferencia = binding.editPontoReferencia.text.toString(),
+                observacoes = binding.editObservacoes.text.toString(),
+                // Consider security practices for handling passwords
             )
 
             FirebaseFirestore.getInstance()

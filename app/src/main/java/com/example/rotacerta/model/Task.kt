@@ -8,20 +8,32 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Task(
     //adiciona os campos do banco
-    // var descricao : String =""
-    var id : String? = null,
-    var title : String? = null,
     var documentId: String = "",
-    var nomeCompleto: String? = null,
-    var cpf: String? = null,
-    var telefone: String? = null,
+    //DADOS RESPONSAVEL
     var email: String? = null,
-    var senha: String? = null,
-    val turno: Int? = null
+    var cpf: String? = null,
+    var nomeCompleto: String? = null,
+    var rua: String? = null,
+    var numero: String? = null,
+    var cep: String? = null,
+    var cidade: String? = null,
+    var estado: String? = null,
+    var ddd: String? = null,
+    var telefone: String? = null ,
+    //dados do aluno
+    var nomeCompletoAluno: String? = null,
+    var escola: String? = null,
+    var turno: String? = null,
+    var pontoReferencia: String? = null,
+    var observacoes: String? = null,
+
+    //dados para criar rotas
+    var latitude: Double? = null,
+    var longitude: Double? = null
 
 
 ) : Parcelable {
-    init{
+    /*init{
         this.id = FirebaseHelper.getDataBase().push().key ?: ""
-    }
+    }*/
 }

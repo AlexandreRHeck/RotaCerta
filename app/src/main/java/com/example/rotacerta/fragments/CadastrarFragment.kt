@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.rotacerta.databinding.FragmentCadastrarBinding
+import com.example.rotacerta.model.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -37,30 +38,46 @@ class CadastrarFragment : Fragment() {
         }
 
         binding.btnCadastrar.setOnClickListener {
-            val nomeCompleto = binding.cadastrarNomeCompleto.editText?.text.toString()
-            val rua = binding.cadastrarNomeCompleto.editText?.text.toString()
-            val numero = binding.cadastrarNumero.editText?.text.toString()
-            val cep = binding.cadastrarCEP.editText?.text.toString()
-            val cidade = binding.cadastrarCidade.editText?.text.toString()
-            val estado = binding.cadastrarEstado.editText?.text.toString()
-            val ddd = binding.cadastrarDDD.editText?.text.toString()
-            val telefone = binding.cadastrarTelefone.editText?.text.toString()
 
+            //DADOS RESPONSAVEL
+            var email = binding.cadastrarEmail.editText?.text.toString()
+            var cpf = binding.cadastrarCPF.editText?.text.toString()
+            var nomeCompleto = binding.cadastrarNomeCompletoResponsavel.editText?.text.toString()
+            var rua = binding.cadastrarRua.editText?.text.toString()
+            var numero = binding.cadastrarNumero.editText?.text.toString()
+            var cep = binding.cadastrarCEP.editText?.text.toString()
+            var cidade = binding.cadastrarCidade.editText?.text.toString()
+            var estado = binding.cadastrarEstado.editText?.text.toString()
+            var ddd = binding.cadastrarDDD.editText?.text.toString()
+            val telefone = binding.cadastrarTelefone.editText?.text.toString()
+            //dados do aluno
+            var nomeCompletoAluno = binding.cadastrarNomeCompletoAluno.editText?.text.toString()
+            var escola = binding.cadastrarEscola.editText?.text.toString()
+            var turno = binding.cadastrarTurno.editText?.text.toString()
+            var pontoReferencia = binding.cadastrarPontoReferencia.editText?.text.toString()
+            var observacoes = binding.cadastrarObservacoes.editText?.text.toString()
             // ... (Obter os valores dos outros campos)
+
 
             // Gerar um UID único para o novo cadastro
             val novoCadastroUid = firestore.collection("cadastros").document().id
-
             val dadosUsuario = hashMapOf(
                 "uid" to novoCadastroUid,
+                "email" to email,
                 "nomeCompleto" to nomeCompleto,
+                "cpf" to cpf,
                 "rua" to rua,
                 "numero" to numero,
                 "cep" to cep,
                 "cidade" to cidade,
                 "estado" to estado,
                 "ddd" to ddd,
-                "telefone" to telefone
+                "telefone" to telefone,
+                "nomeCompletoAluno" to nomeCompletoAluno,
+                "escola" to escola,
+                "turno" to turno,
+                "pontoReferencia" to pontoReferencia,
+                "observacoes" to observacoes,
                 // ... (Adicionar os outros campos)
             )
 
@@ -70,8 +87,11 @@ class CadastrarFragment : Fragment() {
                 .add(dadosUsuario)
                 .addOnSuccessListener {
                     Toast.makeText(requireContext(), "Cadastro realizado com sucesso! ID: $novoCadastroUid", Toast.LENGTH_SHORT).show()
+
                     // ... (Limpar os campos do formulário) ...
-                    binding.cadastrarNomeCompleto.editText?.setText("")
+                    binding.cadastrarEmail.editText?.setText("")
+                    binding.cadastrarCPF.editText?.setText("")
+                    binding.cadastrarNomeCompletoResponsavel.editText?.setText("")
                     binding.cadastrarRua.editText?.setText("")
                     binding.cadastrarNumero.editText?.setText("")
                     binding.cadastrarCEP.editText?.setText("")
@@ -79,6 +99,12 @@ class CadastrarFragment : Fragment() {
                     binding.cadastrarEstado.editText?.setText("")
                     binding.cadastrarDDD.editText?.setText("")
                     binding.cadastrarTelefone.editText?.setText("")
+                    //dados do aluno
+                    binding.cadastrarNomeCompletoAluno.editText?.setText("")
+                    binding.cadastrarEscola.editText?.setText("")
+                    binding.cadastrarTurno.editText?.setText("")
+                    binding.cadastrarPontoReferencia.editText?.setText("")
+                    binding.cadastrarObservacoes.editText?.setText("")
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(requireContext(), "Erro ao cadastrar: ${e.message}", Toast.LENGTH_SHORT).show()

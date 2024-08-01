@@ -18,11 +18,6 @@ class TaskAdapter(
     private val onEditClickListener: (Task, MyViewHolder) -> Unit // Modified to accept both Task and ViewHolder
 ) : RecyclerView.Adapter<TaskAdapter.MyViewHolder>() {
 
-    companion object {
-        val SELECT_REMOVE: Int = 1
-        val SELECT_EDIT: Int = 2
-    }
-
     private val taskList = mutableListOf<Task>()
     private var firestoreListener: ListenerRegistration? = null
 
@@ -63,6 +58,7 @@ class TaskAdapter(
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val task = taskList[position]
         holder.binding.textViewcardNome.text = task.nomeCompleto
+        holder.binding.textViewcardDescricao.text = task.nomeCompletoAluno
 
         holder.binding.btnCardDelite.setOnClickListener {
             deleteTask(task, position) // Pass position for efficient removal

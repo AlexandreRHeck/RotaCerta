@@ -2,19 +2,13 @@ package com.example.rotacerta
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.rotacerta.databinding.ActivityCadastroBinding
-import com.example.rotacerta.databinding.ActivityLoginBinding
 import com.example.rotacerta.utils.exibirMensagem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.example.rotacerta.databinding.FragmentEditBinding
 class CadastroActivity : AppCompatActivity() {
 
     private val binding by lazy {
