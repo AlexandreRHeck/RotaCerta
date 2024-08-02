@@ -1,6 +1,6 @@
 package com.example.rotacerta.fragments
-
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -27,13 +27,13 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.location.Location
+import android.net.Uri
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.maps.GeocodingApi
 import com.google.maps.model.GeocodingResult
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.PolyUtil
-
-// ... (imports para o adaptador do RecyclerView, etc.)
 
 class RotaFragment : Fragment(), OnMapReadyCallback {
 
@@ -230,30 +230,54 @@ class RotaFragment : Fragment(), OnMapReadyCallback {
 
         resultado?.routes?.firstOrNull()?.let { route ->
             val decodedPath = PolyUtil.decode(route.overviewPolyline.encodedPath)
-
-            // Convert com.google.maps.model.LatLng to com.google.android.gms.maps.model.LatLng
             val convertedPath = decodedPath.map { LatLng(it.latitude, it.longitude) }
 
-            val polylineOptions = PolylineOptions().addAll(convertedPath)
-            googleMap.addPolyline(polylineOptions)
-
-            // Adiciona marcadores para origem e destino
+            googleMap.addPolyline(PolylineOptions().addAll(convertedPath))
             googleMap.addMarker(MarkerOptions().position(convertedPath.first()).title("Origem"))
             googleMap.addMarker(MarkerOptions().position(convertedPath.last()).title("Destino"))
 
-
-            // Ajusta a câmera para mostrar toda a rota
             val boundsBuilder = LatLngBounds.Builder()
-            for (point in convertedPath) {
-                boundsBuilder.include(point)
-            }
+            for (point in convertedPath) { boundsBuilder.include(point) }
             val bounds = boundsBuilder.build()
             googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
 
-            /*
-            // Cria o link compartilhável
-            val link = gerarLinkRota(convertedPath)
-            binding.textViewLinkRota.text = "Link da Rota: $link"*/
+            // Get the destination address
+            val destination = route.legs.last().endAddress
+
+            // Make the "Navegar" button visible when the route is displayed
+            binding.buttonNavegar.visibility = View.VISIBLE
+
+            val waypoints = route.legs.flatMap { leg ->
+                listOf(LatLng(leg.startLocation.lat, leg.startLocation.lng)) // Add the start location of each leg as a waypoint
+            }.drop(1) // Remove the first waypoint (which is the origin)
+
+
+            for (waypoint in waypoints) {
+                googleMap.addMarker(MarkerOptions().position(waypoint).title("Parada"))
+            }
+
+            // Set onClickListener for the Navegar button
+            binding.buttonNavegar.setOnClickListener {
+                abrirNavegacao(route.legs.last().endAddress, waypoints) // Pass the waypoints
+            }
+        } ?: run {
+            // Handle the case where there is no route (e.g., show an error message)
+            Toast.makeText(requireContext(), "Não foi possível calcular a rota", Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun abrirNavegacao(destino: String, waypoints: List<LatLng>) {
+        try {
+            // Create a URI with the destination and waypoints formatted correctly
+            val waypointsStr = waypoints.joinToString("|") { "${it.latitude},${it.longitude}" }
+            val gmmIntentUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=$destino&waypoints=$waypointsStr")
+
+            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+
+            startActivity(mapIntent)
+        } catch (e: Exception)
+        {
+            Toast.makeText(requireContext(), "Erro ao abrir o Google Maps", Toast.LENGTH_SHORT).show()
         }
     }
 
