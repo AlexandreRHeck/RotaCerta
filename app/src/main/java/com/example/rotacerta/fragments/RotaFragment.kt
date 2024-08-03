@@ -77,7 +77,7 @@ class RotaFragment : Fragment(), OnMapReadyCallback {
         // Inicializa o Firestore
         db = FirebaseFirestore.getInstance()
         // Configurar o Spinner de turnos (substitua pelos seus turnos reais)
-        val turnos = listOf("Manhã", "Tarde", "Noite")
+        val turnos = listOf("Turno","Manhã", "Tarde", "Noite")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, turnos)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerTurno.adapter = adapter
