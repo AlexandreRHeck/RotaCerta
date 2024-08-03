@@ -26,14 +26,7 @@ data class Task(
     var turno: String? = null,
     var pontoReferencia: String? = null,
     var observacoes: String? = null,
-
     //dados para criar rotas
     var latitude: Double? = null,
     var longitude: Double? = null
-
-
-) : Parcelable {
-    /*init{
-        this.id = FirebaseHelper.getDataBase().push().key ?: ""
-    }*/
-}
+) : Parcelable

@@ -3,7 +3,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="primaria">#FE6F23</color>
+    <color name="primaria">#FF7F50</color>
+    <color name="orange">#FE6F23</color>
     <color name="destaque">#696969</color>
 
     <color name="cinza">#D7D6D6</color>

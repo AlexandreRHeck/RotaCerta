@@ -193,7 +193,9 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:hint="Escola"
+            app:layout_constraintBottom_toTopOf="@+id/spinnerTurno"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cadastrarNomeCompletoAluno">
@@ -204,21 +206,17 @@
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/cadastrarTurno"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        <Spinner
+            android:id="@+id/spinnerTurno"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/spinner_background"
+            android:foreground="?attr/selectableItemBackground"
             android:hint="Turno"
+            app:layout_constraintBottom_toTopOf="@+id/cadastrarPontoReferencia"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cadastrarEscola">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number" />
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toBottomOf="@+id/cadastrarPontoReferencia" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/cadastrarPontoReferencia"
@@ -228,7 +226,7 @@
             android:hint="Ponto de Referência"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cadastrarTurno">
+            app:layout_constraintTop_toBottomOf="@+id/spinnerTurno">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"

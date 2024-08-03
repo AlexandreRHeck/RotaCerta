@@ -1,16 +1,19 @@
 package com.example.rotacerta.fragments
 
+import android.R
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.rotacerta.databinding.FragmentCadastrarBinding
 import com.example.rotacerta.model.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import android.widget.Spinner
 
 class CadastrarFragment : Fragment() {
 
@@ -37,8 +40,14 @@ class CadastrarFragment : Fragment() {
             return binding.root // Agora você pode usar 'binding' aqui
         }
 
-        binding.btnCadastrar.setOnClickListener {
+        // Set up Spinner for "Turno" (shift)
+        val spinnerTurno = binding.spinnerTurno // Get reference to the Spinner
+        val turnos = listOf("Manhã", "Tarde", "Noite")
+        val adapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_item, turnos) // Note: use 'R.layout...'
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+        spinnerTurno.adapter = adapter
 
+        binding.btnCadastrar.setOnClickListener {
             //DADOS RESPONSAVEL
             var email = binding.cadastrarEmail.editText?.text.toString()
             var cpf = binding.cadastrarCPF.editText?.text.toString()
@@ -53,7 +62,7 @@ class CadastrarFragment : Fragment() {
             //dados do aluno
             var nomeCompletoAluno = binding.cadastrarNomeCompletoAluno.editText?.text.toString()
             var escola = binding.cadastrarEscola.editText?.text.toString()
-            var turno = binding.cadastrarTurno.editText?.text.toString()
+            var turno = binding.spinnerTurno.selectedItem.toString()
             var pontoReferencia = binding.cadastrarPontoReferencia.editText?.text.toString()
             var observacoes = binding.cadastrarObservacoes.editText?.text.toString()
             // ... (Obter os valores dos outros campos)
@@ -64,8 +73,8 @@ class CadastrarFragment : Fragment() {
             val dadosUsuario = hashMapOf(
                 "uid" to novoCadastroUid,
                 "email" to email,
-                "nomeCompleto" to nomeCompleto,
                 "cpf" to cpf,
+                "nomeCompleto" to nomeCompleto,
                 "rua" to rua,
                 "numero" to numero,
                 "cep" to cep,
@@ -102,7 +111,7 @@ class CadastrarFragment : Fragment() {
                     //dados do aluno
                     binding.cadastrarNomeCompletoAluno.editText?.setText("")
                     binding.cadastrarEscola.editText?.setText("")
-                    binding.cadastrarTurno.editText?.setText("")
+                    binding.spinnerTurno.setSelection(0)
                     binding.cadastrarPontoReferencia.editText?.setText("")
                     binding.cadastrarObservacoes.editText?.setText("")
                 }

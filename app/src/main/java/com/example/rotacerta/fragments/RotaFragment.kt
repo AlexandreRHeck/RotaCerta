@@ -41,6 +41,8 @@ class RotaFragment : Fragment(), OnMapReadyCallback {
     private var _binding: FragmentRotaBinding? = null
     private val binding get() = _binding!!
 
+    private var locationMarker: Marker? = null
+
     // Cliente para obter a localização do usuário
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -70,27 +72,40 @@ class RotaFragment : Fragment(), OnMapReadyCallback {
         // Inicializa o MapView
         binding.mapView.onCreate(savedInstanceState)
         binding.mapView.getMapAsync(this)
-
         // Inicializa o FusedLocationProviderClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-
         // Inicializa o Firestore
         db = FirebaseFirestore.getInstance()
-
         // Configurar o Spinner de turnos (substitua pelos seus turnos reais)
         val turnos = listOf("Manhã", "Tarde", "Noite")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, turnos)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerTurno.adapter = adapter
 
-        // Define o listener para o botão "Gerar Rota"
-        binding.buttonGerarRota.setOnClickListener { gerarRota() }
+        binding.buttonGerarRota.setOnClickListener {
+            val enderecoDestino = binding.editTextEnderecoDestino.text.toString()
+
+            var hasEmptyFields = false
+
+            // Check if enderecoDestino is empty
+            if (enderecoDestino.isBlank()) {
+                binding.editTextEnderecoDestino.error = "Campo obrigatório"
+                hasEmptyFields = true
+            } else {
+                binding.editTextEnderecoDestino.error = null
+            }
+
+            if (!hasEmptyFields) {
+                gerarRota() // Call gerarRota only if there are no empty fields
+            }
+        }
     }
 
     // Callback chamado quando o mapa está pronto para ser usado
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
 
+        googleMap.isMyLocationEnabled = true
 
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -113,10 +128,50 @@ class RotaFragment : Fragment(), OnMapReadyCallback {
                 1
             )
         }
+        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
+            location?.let {
+                val latLng = LatLng(it.latitude,
+                it.longitude)
+                // Add/update location marker
+                if (locationMarker == null) {
+                    locationMarker = googleMap.addMarker(
+                        MarkerOptions()
+                            .position(latLng)
+                            .title("Minha Localização")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    )
+                } else {
+                    locationMarker?.position = latLng
+                }
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+            }
+        }
+
+        // Enable map controls to fix the static issue
+        googleMap.uiSettings.isZoomControlsEnabled = true
+        googleMap.uiSettings.isScrollGesturesEnabled = true
+        googleMap.uiSettings.isZoomGesturesEnabled = true
     }
+
+
     private fun gerarRota() {
         val enderecoDestino = binding.editTextEnderecoDestino.text.toString()
         val turnoSelecionado = binding.spinnerTurno.selectedItem.toString()
+
+
+        var hasEmptyFields = false
+
+        // Check if enderecoDestino is empty
+        if (enderecoDestino.isBlank()) {
+            binding.editTextEnderecoDestino.error = "Campo obrigatório"
+            hasEmptyFields = true
+        } else {
+            binding.editTextEnderecoDestino.error = null
+        }
+
+        if (hasEmptyFields) {
+            return // Don't proceed if there are empty fields
+        }
 
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -159,26 +214,42 @@ class RotaFragment : Fragment(), OnMapReadyCallback {
                                             obterRota(origin, enderecoDestino, waypoints)
                                         }
 
-                                        // Convert waypoints to the correct LatLng type before using
-                                        val convertedWaypoints = waypoints.map { LatLng(it.latitude, it.longitude) }
-                                        exibirRotaNoMapa(resultadoRota, map) // Pass only resultadoRota and map
+                                        resultadoRota?.let {  // Null check for resultadoRota
+                                            val convertedWaypoints = waypoints.map { LatLng(it.latitude, it.longitude) }
+                                            exibirRotaNoMapa(resultadoRota, map)
 
-                                        // Display markers for the waypoints
-                                        for (waypoint in convertedWaypoints) {
-                                            map.addMarker(MarkerOptions().position(waypoint))
-                                        }
+                                            // Display markers for the waypoints
+                                            for (waypoint in convertedWaypoints) {
+                                                map.addMarker(MarkerOptions().position(waypoint))
+                                            }
 
-                                        // Adjust the camera to show the entire route (including waypoints)
-                                        val boundsBuilder = LatLngBounds.Builder()
-                                        boundsBuilder.include(LatLng(origin.latitude, origin.longitude)) // Include origin
-                                        boundsBuilder.include(LatLng(resultadoRota!!.routes[0].legs[0].endLocation.lat, resultadoRota.routes[0].legs[0].endLocation.lng)) // Include destination
-                                        for (waypoint in convertedWaypoints) {
-                                            boundsBuilder.include(waypoint) // Include each waypoint
+                                            it.routes?.firstOrNull()?.let { route ->  // Null check for routes and firstOrNull()
+                                                // Adjust the camera to show the entire route (including waypoints)
+                                                val boundsBuilder = LatLngBounds.Builder()
+                                                boundsBuilder.include(LatLng(origin.latitude, origin.longitude)) // Include origin
+
+                                                route.legs?.lastOrNull()?.let { lastLeg ->  // Null check for legs and lastOrNull()
+                                                    lastLeg.endLocation?.let { endLocation -> // Null check for endLocation
+                                                        boundsBuilder.include(LatLng(endLocation.lat, endLocation.lng)) // Include destination
+                                                    }
+                                                }
+
+                                                for (waypoint in convertedWaypoints) {
+                                                    boundsBuilder.include(waypoint) // Include each waypoint
+                                                }
+
+                                                val bounds = boundsBuilder.build()
+                                                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+                                            }
                                         }
-                                        val bounds = boundsBuilder.build()
-                                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+                                            ?: run {
+                                                // Handle the case where no route is found
+                                                Toast.makeText(requireContext(), "Ex: Rua Quinze de Novembro,123 -Centro, PortoAlegre, RS", Toast.LENGTH_LONG).show()
+                                            }
                                     }
                                 }
+
+                                // ... (rest of your code)
                             }
                         }
                         .addOnFailureListener { exception ->
@@ -209,16 +280,30 @@ class RotaFragment : Fragment(), OnMapReadyCallback {
                 .apiKey("AIzaSyBl563BA1QkQ78JZo-0gpm4d-Wik5Qa5B8")
                 .build()
 
-            DirectionsApi.newRequest(context)
+            val result =  DirectionsApi.newRequest(context)
                 .mode(TravelMode.DRIVING)
                 .origin(com.google.maps.model.LatLng(origem.latitude, origem.longitude))
                 .destination(destino)
                 .waypoints(*waypoints.map { com.google.maps.model.LatLng(it.latitude, it.longitude) }.toTypedArray())
                 .optimizeWaypoints(true)
                 .await()
+            // Check if any routes were found
+            if (result.routes.isEmpty()) {
+                // No route found, handle the error gracefully
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "Endereço incompleto ou inválido. Tente novamente.", Toast.LENGTH_SHORT).show()
+                }
+                return@withContext null
+            } else {
+                return@withContext result
+            }
+
         } catch (e: Exception) {
-            // Lidar com erros na obtenção da rota
-            null
+            // Handle other exceptions (e.g., network issues)
+            withContext(Dispatchers.Main) {
+                Toast.makeText(requireContext(), "Verifique se o endereço está completo e tente novamente", Toast.LENGTH_LONG).show()
+            }
+            return@withContext null
         }
     }
 
@@ -261,13 +346,13 @@ class RotaFragment : Fragment(), OnMapReadyCallback {
                 abrirNavegacao(route.legs.last().endAddress, waypoints) // Pass the waypoints
             }
         } ?: run {
-            // Handle the case where there is no route (e.g., show an error message)
+            // Lidar com o caso em que não há rota (por exemplo, mostrar uma mensagem de erro)
             Toast.makeText(requireContext(), "Não foi possível calcular a rota", Toast.LENGTH_SHORT).show()
         }
     }
     private fun abrirNavegacao(destino: String, waypoints: List<LatLng>) {
         try {
-            // Create a URI with the destination and waypoints formatted correctly
+            // Crie um URI com o destino e os waypoints formatados corretamente
             val waypointsStr = waypoints.joinToString("|") { "${it.latitude},${it.longitude}" }
             val gmmIntentUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=$destino&waypoints=$waypointsStr")
 
