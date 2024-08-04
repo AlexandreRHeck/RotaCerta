@@ -3,15 +3,22 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="primaria">#FF7F50</color>
+    <color name="primaria">#FE6F23</color>
     <color name="orange">#FE6F23</color>
     <color name="destaque">#696969</color>
 
+    <color name="roxo">#743D73</color>
+    <color name="azul">#add8e6</color>
+    <color name="laranja">#FE6F23</color>
+
     <color name="cinza">#D7D6D6</color>
+    <color name="cardBack">#E5E5E5</color>F2F2F2
+
+    <color name="cardBackf">#F2F2F2</color>
 
     <color name="remove">#FF4C38</color>
     <color name="edita">#03B6FC</color>
-    <color name="cardBack">#E5E5E5</color>
+
     <color name="light_blue_600">#FF039BE5</color>
     <color name="light_blue_900">#FF01579B</color>
     <color name="light_blue_A200">#FF40C4FF</color>

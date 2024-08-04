@@ -10,7 +10,7 @@
         android:layout_height="120dp"
         android:layout_marginHorizontal="8dp"
         android:layout_marginVertical="8dp"
-        app:cardBackgroundColor="@color/cardBack"
+        app:cardBackgroundColor="@color/cardBackf"
         app:cardCornerRadius="10dp"
         app:cardMaxElevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -29,7 +29,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="60dp"
+                android:backgroundTint="@color/black"
                 android:text="Name"
+                android:textColor="@color/roxo"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btnCardDelite"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -43,6 +47,8 @@
                 android:layout_marginBottom="30dp"
                 android:maxLines="2"
                 android:text="Descrição"
+                android:textColor="@color/roxo"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -50,23 +56,24 @@
 
             <ImageView
                 android:id="@+id/btnCardEdit"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintBottom_toBottomOf="@+id/textViewcardNome"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textViewcardNome"
-                app:layout_constraintVertical_bias="0.545"
+                app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_edit" />
 
             <ImageView
                 android:id="@+id/btnCardDelite"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="32dp"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:layout_marginEnd="36dp"
                 app:layout_constraintBottom_toBottomOf="@+id/textViewcardNome"
                 app:layout_constraintEnd_toStartOf="@+id/btnCardEdit"
                 app:layout_constraintTop_toTopOf="@+id/textViewcardNome"
+                app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_delete" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

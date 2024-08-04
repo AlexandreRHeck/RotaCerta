@@ -18,6 +18,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
-        app:subtitleTextColor="@color/white"
-        app:titleTextColor="@color/white" />
+        app:subtitleTextColor="@color/cardBackf"
+        app:titleTextColor="@color/cardBackf" />
 </androidx.constraintlayout.widget.ConstraintLayout>
