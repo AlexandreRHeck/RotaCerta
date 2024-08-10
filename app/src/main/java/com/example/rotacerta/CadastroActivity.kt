@@ -4,11 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.rotacerta.databinding.ActivityCadastroBinding
+import com.example.rotacerta.model.Task
+import com.example.rotacerta.model.Usuario
 import com.example.rotacerta.utils.exibirMensagem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.firestore.FirebaseFirestore
+
 class CadastroActivity : AppCompatActivity() {
 
     private val binding by lazy {
@@ -21,6 +25,10 @@ class CadastroActivity : AppCompatActivity() {
 
     //fireBase
     private val firebaseAuth by lazy {
+        FirebaseAuth.getInstance()
+    }
+
+    private val firestore by lazy {
         FirebaseAuth.getInstance()
     }
 
@@ -51,10 +59,20 @@ class CadastroActivity : AppCompatActivity() {
             email,senha
         ).addOnCompleteListener{resultado ->
             if(resultado.isSuccessful){
-                exibirMensagem("Sucesso ao fazer se Cadastro")
+
                 startActivity(
                     Intent(applicationContext,MainActivity::class.java)
                 )
+                //salvar os dados do usuario
+                val idUsuario = resultado.result.user?.uid
+                if(idUsuario != null){
+                    val usuario = Usuario(
+                        idUsuario,nome,email
+                    )
+                    salvarUsuarioFireStore(usuario)
+                }
+
+
             }
         }.addOnFailureListener{erro ->
             try{
@@ -71,6 +89,21 @@ class CadastroActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    private fun salvarUsuarioFireStore(usuario: Usuario) {
+
+        FirebaseFirestore.getInstance()
+            .collection("usuarios")
+            .document(usuario.documentId)
+            .set(usuario)
+            .addOnSuccessListener {
+                exibirMensagem("Sucesso ao fazer se Cadastro")
+            }
+            .addOnFailureListener{
+                exibirMensagem("Erro ao fazer se Cadastro")
+            }
+
     }
 
     private fun validarCampos(): Boolean {

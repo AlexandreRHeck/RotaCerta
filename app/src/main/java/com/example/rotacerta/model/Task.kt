@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Task(
     //adiciona os campos do banco
-    var documentId: String = "",
+    var documentId: String,
     //DADOS RESPONSAVEL
     var email: String? = null,
     var cpf: String? = null,
@@ -29,4 +29,27 @@ data class Task(
     //dados para criar rotas
     var latitude: Double? = null,
     var longitude: Double? = null
-) : Parcelable
+) : Parcelable{
+    // Adicione um construtor sem argumentos com valores padrão
+    constructor() : this(
+        documentId = "",
+        email = null,
+        cpf = null,
+        nomeCompleto = null,
+        rua = null,
+        numero = null,
+        cep = null,
+        cidade = null,
+        estado = null,
+        ddd = null,
+        telefone = null,
+        nomeCompletoAluno = null,
+        escola = null,
+        turno = null,
+        pontoReferencia = null,
+        observacoes = null,
+        latitude = null,
+        longitude = null
+    )
+
+}
