@@ -15,6 +15,7 @@ import com.example.rotacerta.databinding.ActivityCadastroBinding
 import com.example.rotacerta.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy {
@@ -24,12 +25,17 @@ class MainActivity : AppCompatActivity() {
     private val firebaseAuth by lazy {
         FirebaseAuth.getInstance()
     }
+    private val db by lazy { FirebaseFirestore.getInstance() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        buscarNomeUsuarioFirestore()
         setContentView(binding.root)
-        inicializarToolbar()
         inicializarNavegacaoAbas()
+
     }
+
+
 
     private fun inicializarNavegacaoAbas() {
         val tabLayout = binding.tabLayoutPricipal
@@ -47,12 +53,13 @@ class MainActivity : AppCompatActivity() {
         }.attach()
     }
 
-    private fun inicializarToolbar() {
+    private fun inicializarToolbar(nomeUsuario: String?) {
         val toolbar = binding.includeMainToolbar.tbPricipal
         setSupportActionBar(toolbar)
 
+        //Salva Nome do usuario logado
         supportActionBar?.apply {
-            title = "Rota Certa"
+          title = "Bem vindo ${nomeUsuario ?: "Ao APP Rota Certa"}" // Use "Rota Certa" como fallback se o nome for nulo
         }
         addMenuProvider(
             object : MenuProvider{
@@ -75,6 +82,27 @@ class MainActivity : AppCompatActivity() {
 
             }
         )
+
+    }
+
+    private fun buscarNomeUsuarioFirestore() {
+
+        val userId = firebaseAuth.currentUser?.uid ?: return // Lidar com usuário não autenticado
+
+        val userDocRef = db.collection("usuarios").document(userId)
+        userDocRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    val userData = document.data
+                    val nomeUsuario = userData?.get("nomeMotorista") as? String
+                    inicializarToolbar(nomeUsuario)
+                } else {
+                    inicializarToolbar(null)
+                }
+            }
+            .addOnFailureListener { exception ->
+                inicializarToolbar(null)
+            }
 
     }
 

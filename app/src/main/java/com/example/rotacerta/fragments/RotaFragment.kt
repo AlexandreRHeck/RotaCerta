@@ -29,6 +29,7 @@ import kotlinx.coroutines.withContext
 import android.location.Location
 import android.net.Uri
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.maps.GeocodingApi
 import com.google.maps.model.GeocodingResult
@@ -52,9 +53,12 @@ class RotaFragment : Fragment(), OnMapReadyCallback {
     // Objeto do GoogleMap que será inicializado quando o mapa estiver pronto
     private var googleMap: GoogleMap? = null
 
-
     // Lista de waypoints (pontos intermediários da rota)
     private var waypoints: List<LatLng> = emptyList()
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+    }
 
     // Método chamado quando a View do Fragment é criada
     override fun onCreateView(
@@ -103,9 +107,11 @@ class RotaFragment : Fragment(), OnMapReadyCallback {
 
     // Callback chamado quando o mapa está pronto para ser usado
     override fun onMapReady(googleMap: GoogleMap) {
-        this.googleMap = googleMap
 
-        googleMap.isMyLocationEnabled = true
+        this.googleMap = googleMap
+        solicitarPermissaoLocalizacao()
+        // googleMap.isMyLocationEnabled = true
+
 
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -153,8 +159,73 @@ class RotaFragment : Fragment(), OnMapReadyCallback {
         googleMap.uiSettings.isZoomGesturesEnabled = true
     }
 
+    private fun solicitarPermissaoLocalizacao() {
+        val fineLocationPermission = Manifest.permission.ACCESS_FINE_LOCATION
+
+        if (ContextCompat.checkSelfPermission(requireContext(), fineLocationPermission) == PackageManager.PERMISSION_GRANTED)
+        {
+            // Permission already granted
+            enableMyLocationOnMap()
+        } else {
+            // Check if the user has previously denied the permission and show rationale if needed
+            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), fineLocationPermission)) {
+                // Explain to the user why you need the permission
+                Toast.makeText(requireContext(), "A permissão de localização é necessária para exibir sua localização no mapa e calcular rotas.", Toast.LENGTH_LONG).show()
+            }
+
+            // Request permission
+            requestPermissions(arrayOf(fineLocationPermission), LOCATION_PERMISSION_REQUEST_CODE)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE)
+        {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, enable My Location
+                enableMyLocationOnMap()
+            } else {
+                // Permission denied, handle accordingly
+                Toast.makeText(requireContext(), "Permissão de localização negada. A funcionalidade de localização não estará disponível.", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun enableMyLocationOnMap() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            googleMap?.isMyLocationEnabled = true // Enable My Location only after permission is granted
+
+            // Now you can safely access the user's location
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
+                location?.let {
+                    val latLng = LatLng(it.latitude,
+                    it.longitude)
+
+                    // Add/update location marker
+                    if (locationMarker == null) {
+                        locationMarker = googleMap?.addMarker(
+                            MarkerOptions()
+                                .position(latLng)
+                                .title("Minha Localização")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                        )
+                    } else {
+                        locationMarker?.position = latLng
+                    }
+
+                    googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+                }
+            }
+        }
+    }
+
 
     private fun gerarRota() {
+
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // ... (your existing code to get the last location and generate the route)
+
+
         val enderecoDestino = binding.editTextEnderecoDestino.text.toString()
         val turnoSelecionado = binding.spinnerTurno.selectedItem.toString()
 
@@ -266,6 +337,9 @@ class RotaFragment : Fragment(), OnMapReadyCallback {
                 1
             )
             // ...
+         }
+        } else {
+            solicitarPermissaoLocalizacao() // Request permission if not granted
         }
     }
 

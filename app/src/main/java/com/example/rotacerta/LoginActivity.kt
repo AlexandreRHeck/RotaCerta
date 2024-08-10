@@ -54,12 +54,34 @@ class LoginActivity : AppCompatActivity() {
                 Intent(this,CadastroActivity::class.java)
             )
         }
+        binding.textEsqueceuSenha.setOnClickListener {
+            recuperarSenha()
+        }
         binding.btnLogar.setOnClickListener{
             if(validarCampos()){
                 logarUsuario()
                 
             }
         }
+    }
+
+    private fun recuperarSenha() {
+        val email = binding.editLoginEmail.text.toString()
+
+        if (email.isEmpty()) {
+            binding.textInputLayoutLoginEmail.error = "Digite seu e-mail para recuperar a senha"
+            return
+        }
+
+        firebaseAuth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    exibirMensagem("Um e-mail de redefinição de senha foi enviado para $email")
+                } else {
+                    exibirMensagem("Erro ao enviar e-mail de redefinição de senha: ${task.exception?.message}")
+                    // Lide com o erro de forma mais apropriada aqui (log, etc.)
+                }
+            }
     }
 
     private fun logarUsuario() {

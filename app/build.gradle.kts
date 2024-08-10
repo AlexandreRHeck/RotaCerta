@@ -71,6 +71,8 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation ("androidx.appcompat:appcompat:1.6.1")
 
+    implementation ("com.airbnb.android:lottie:6.0.0") // dependência do Lottie
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

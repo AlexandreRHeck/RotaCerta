@@ -47,8 +47,9 @@ class PerfilActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { exception ->
-                exibirMensagem("Erro ao buscar dados do usuário")
                 // Lidar com o erro de forma mais apropriada, talvez logando a exceção
+                exibirMensagem("Erro ao buscar dados do usuário")
+
             }
     }
 
@@ -67,8 +68,9 @@ class PerfilActivity : AppCompatActivity() {
                 exibirMensagem("Dados salvos com sucesso")
             }
             .addOnFailureListener { exception ->
-                exibirMensagem("Erro ao salvar dados")
                 // Lidar com o erro de forma mais apropriada
+                exibirMensagem("Erro ao salvar dados")
+
             }
     }
 }
