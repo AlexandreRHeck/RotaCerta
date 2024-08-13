@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
         //Salva Nome do usuario logado
         supportActionBar?.apply {
-          title = "Bem vindo ${nomeUsuario ?: "Ao APP Rota Certa"}" // Use "Rota Certa" como fallback se o nome for nulo
+          title = "Rota Certa"
         }
         addMenuProvider(
             object : MenuProvider{

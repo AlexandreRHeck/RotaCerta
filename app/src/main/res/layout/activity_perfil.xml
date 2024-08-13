@@ -37,12 +37,76 @@
                 android:inputType="textPersonName" />
 
             <EditText
-                android:id="@+id/editEmailPerfil"
+                android:id="@+id/editCpfPerfil"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Email"
-                android:inputType="textEmailAddress" />
+                android:hint="CPF"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/editTelefonePerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Telefone"
+                android:inputType="phone" />
+
+            <EditText
+                android:id="@+id/editTipoVeiculoPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Tipo de veículo (Van ou Ônibus)"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/editPlacaVeiculoPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Placa do veículo"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/editEmpresaPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Nome da Empresa (opcional)"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/editEnderecoPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Endereço"
+                android:inputType="textPostalAddress" />
+
+            <EditText
+                android:id="@+id/editCidadePerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Cidade"
+                android:inputType="textCapWords" />
+
+            <EditText
+                android:id="@+id/editEstadoPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Estado"
+                android:inputType="textCapWords" />
+
+            <EditText
+                android:id="@+id/editCepPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="CEP"
+                android:inputType="number" />
 
             <Button
                 android:id="@+id/btnSalvarPerfil"

@@ -1,6 +1,8 @@
 package com.example.rotacerta
 
+import android.app.Activity
 import android.content.Intent
+import android.content.IntentSender
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -9,11 +11,23 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.rotacerta.databinding.ActivityLoginBinding
 import com.example.rotacerta.databinding.ActivityMainBinding
 import com.example.rotacerta.utils.exibirMensagem
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.SettingsClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.android.gms.tasks.Task
 
 class LoginActivity : AppCompatActivity() {
+
+
+    companion object {
+        private const val REQUEST_CHECK_SETTINGS = 1001
+    }
 
     private val binding by lazy {
         ActivityLoginBinding.inflate(layoutInflater)
@@ -39,14 +53,49 @@ class LoginActivity : AppCompatActivity() {
         verificarUsuarioLogado()
     }
 
-    private fun verificarUsuarioLogado() {
-        val usuarioAtual = firebaseAuth.currentUser
-        if(usuarioAtual != null){
-            startActivity(
-                Intent(this,MainActivity::class.java)
-            )
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            if (resultCode == Activity.RESULT_OK) {
+                // O usuário ligou o GPS, prosseguir para a MainActivity
+                startActivity(Intent(this, MainActivity::class.java))
+            } else {
+                // O usuário não ligou o GPS, exibir uma mensagem ou tomar outra ação
+                exibirMensagem("O GPS é necessário para o funcionamento do aplicativo.")
+            }
         }
     }
+
+
+    private fun verificarUsuarioLogado() {
+        val usuarioAtual = firebaseAuth.currentUser
+        if (usuarioAtual != null) {
+            // Verificar se o GPS está ligado
+            val locationRequest = LocationRequest.create().apply {
+                priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            }
+            val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+            val client: SettingsClient = LocationServices.getSettingsClient(this)
+            val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
+
+            task.addOnSuccessListener {
+                // GPS está ligado, prosseguir para a MainActivity
+                startActivity(Intent(this, MainActivity::class.java))
+            }
+
+            task.addOnFailureListener { exception ->
+                if (exception is ResolvableApiException) {
+                    // GPS está desligado, solicitar ao usuário que o ligue
+                    try {
+                        exception.startResolutionForResult(this@LoginActivity, REQUEST_CHECK_SETTINGS)
+                    } catch (sendEx: IntentSender.SendIntentException) {
+                        // Ignorar o erro ou exibir uma mensagem ao usuário
+                    }
+                }
+            }
+        }
+    }
+
 
     private fun inicializarEventosClique() {
         binding.textCadastro.setOnClickListener{
@@ -88,7 +137,7 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth.signInWithEmailAndPassword(
             email,senha
         ).addOnSuccessListener {
-            exibirMensagem("Logado")
+            //exibirMensagem("Logado")
             startActivity(
                 Intent(this,MainActivity::class.java)
             )

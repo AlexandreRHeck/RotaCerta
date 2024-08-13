@@ -95,7 +95,7 @@ class CadastrarFragment : Fragment() {
                 .collection("cadastros")
                 .add(dadosUsuario)
                 .addOnSuccessListener {
-                    Toast.makeText(requireContext(), "Cadastro realizado com sucesso! ID: $novoCadastroUid", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Cadastro realizado com sucesso!", Toast.LENGTH_SHORT).show()
 
                     // ... (Limpar os campos do formulário) ...
                     binding.cadastrarEmail.editText?.setText("")

@@ -19,10 +19,10 @@ class PerfilActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPerfilBinding.inflate(layoutInflater)
-        enableEdgeToEdge()
+        enableEdgeToEdge() // Assuming you have this function for edge-to-edge display
         setContentView(binding.root)
 
-        // ... (código para edge-to-edge)
+        // ... (código para edge-to-edge, se necessário)
 
         buscarDadosUsuario()
 
@@ -39,9 +39,19 @@ class PerfilActivity : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
                     val userData = document.data
+
+                    // Preencher os campos com os dados do usuário
                     binding.editNomePerfil.setText(userData?.get("nomeMotorista") as? String)
-                    binding.editEmailPerfil.setText(userData?.get("emailMotorista") as? String)
-                    // ... (preencher outros campos)
+                    binding.editCpfPerfil.setText(userData?.get("cpfMotorista") as? String)
+                    binding.editTelefonePerfil.setText(userData?.get("telefoneMotorista") as? String)
+                    binding.editTipoVeiculoPerfil.setText(userData?.get("tipoVeiculo") as? String)
+                    binding.editPlacaVeiculoPerfil.setText(userData?.get("placaVeiculo") as? String)
+                    binding.editEmpresaPerfil.setText(userData?.get("nomeEmpresa") as? String)
+                    binding.editEnderecoPerfil.setText(userData?.get("enderecoMotorista") as? String)
+                    binding.editCidadePerfil.setText(userData?.get("cidadeMotorista") as? String)
+                    binding.editEstadoPerfil.setText(userData?.get("estadoMotorista") as? String)
+                    binding.editCepPerfil.setText(userData?.get("cepMotorista") as? String)
+
                 } else {
                     exibirMensagem("Usuário não encontrado")
                 }
@@ -49,7 +59,6 @@ class PerfilActivity : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 // Lidar com o erro de forma mais apropriada, talvez logando a exceção
                 exibirMensagem("Erro ao buscar dados do usuário")
-
             }
     }
 
@@ -58,19 +67,28 @@ class PerfilActivity : AppCompatActivity() {
 
         val updatedData = hashMapOf(
             "nomeMotorista" to binding.editNomePerfil.text.toString(),
-            "emailMotorista" to binding.editEmailPerfil.text.toString()
-            // ... (atualizar outros campos)
+            "cpfMotorista" to binding.editCpfPerfil.text.toString(),
+            "telefoneMotorista" to binding.editTelefonePerfil.text.toString(),
+            "tipoVeiculo" to binding.editTipoVeiculoPerfil.text.toString(),
+            "placaVeiculo" to binding.editPlacaVeiculoPerfil.text.toString(),
+            "nomeEmpresa" to binding.editEmpresaPerfil.text.toString(),
+            "enderecoMotorista" to binding.editEnderecoPerfil.text.toString(),
+            "cidadeMotorista" to binding.editCidadePerfil.text.toString(),
+            "estadoMotorista" to binding.editEstadoPerfil.text.toString(),
+            "cepMotorista" to binding.editCepPerfil.text.toString()
         )
 
+        // Explicitly cast to MutableMap<String, Any>
         db.collection("usuarios").document(userId)
-            .update(updatedData as MutableMap<String, Any>) // Explicit cast here
+            .update(updatedData as MutableMap<String, Any>)
             .addOnSuccessListener {
                 exibirMensagem("Dados salvos com sucesso")
             }
             .addOnFailureListener { exception ->
                 // Lidar com o erro de forma mais apropriada
                 exibirMensagem("Erro ao salvar dados")
-
             }
     }
+
+    // ... (restante do seu código, incluindo a função enableEdgeToEdge, se aplicável)
 }

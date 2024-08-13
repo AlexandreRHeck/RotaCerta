@@ -63,7 +63,7 @@ dependencies {
     implementation("com.google.android.libraries.maps:maps:3.1.0-beta")
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
-    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -71,7 +71,10 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation ("androidx.appcompat:appcompat:1.6.1")
 
-    implementation ("com.airbnb.android:lottie:6.0.0") // dependência do Lottie
+
+
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
 
     implementation(libs.androidx.core.ktx)
