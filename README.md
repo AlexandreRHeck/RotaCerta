@@ -34,7 +34,7 @@ O aplicativo Rota Certa é uma solução completa para o gerenciamento de rotas 
 - Gestão eficiente da frota com monitoramento em tempo real.
 - Melhora na produtividade dos colaboradores, evitando atrasos.
 #### Tecnologias Utilizadas 
-- inguagem: Kotlin
+- Linguagem: Kotlin
 - Banco de Dados: Cloud Firestore (Firebase)
 - Autenticação: Firebase Authentication
 - Outras: Google Maps API, Firebase Cloud Messaging (FCM)
